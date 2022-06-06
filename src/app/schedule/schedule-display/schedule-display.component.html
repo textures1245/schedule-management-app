@@ -43,6 +43,7 @@
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button
+              [ngClass]="outdatedSchedule(schedule.dateTime) ? 'text-secondary': ''"
               class="accordion-button"
               type="button"
               data-bs-toggle="collapse"
@@ -51,6 +52,11 @@
               [attr.aria-controls]="'collapse' + i"
             >
               {{ schedule.dateTime | date: "EEEE, MMMM d, y" }}
+              <em>
+                <small>
+                  {{ outdatedSchedule(schedule.dateTime) ? " -  Outdated" : "" }}
+                </small>
+              </em>
             </button>
           </h2>
           <div
