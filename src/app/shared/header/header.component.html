@@ -1,0 +1,31 @@
+<div class="d-flex align-items-start">
+  <div
+    class="nav flex-column nav-pills me-3 card btn-sm ps-2 text-center"
+    role="tablist"
+    aria-orientation="vertical"
+  >
+    <a
+      routerLink="home"
+      routerLinkActive="active"
+      class="nav-link"
+      role="tab"
+    >
+      Overviews
+    </a>
+    <a
+      routerLink="schedules"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-link"
+      role="tab"
+    >
+      Schedule
+    </a>
+    <a
+      class="btn btn-primary btn-sm nav-link"
+      [routerLink]="['/new-schedule']"
+      routerLinkActive="active"
+      >New Schedule</a
+    >
+  </div>
+</div>

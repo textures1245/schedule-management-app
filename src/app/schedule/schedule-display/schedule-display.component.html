@@ -1,0 +1,296 @@
+<div class="">
+  <div class="d-flex header justify-content-between fw-lighter">
+    <h4>Schedules</h4>
+    <div class="row float-end">
+      <div *ngIf="isSaveSchedule" class="col-5">
+        <button
+          (click)="onSaveSchedule()"
+          class="btn btn-outline-success btn-sm"
+        >
+          Save
+        </button>
+      </div>
+      <div class="col-2">
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="onFetchSchedule()"
+        >
+          Fetch
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div
+    class="body"
+    *ngFor="let schedule of (schedules | async).schedules; let i = index"
+  >
+    <div id="scheduleSelection" class="my-2">
+      <h5
+        class="text-primary mt-4"
+        *ngIf="
+          (schedule.dateTime | date: 'shortDate') ==
+            (today | date: 'shortDate');
+          else others
+        "
+      >
+        Today
+      </h5>
+      <ng-template #others>
+        <h5 *ngIf="i < 1" class="mt-4">Others</h5>
+      </ng-template>
+      <div class="accordion" id="today" class="my-2">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              aria-expanded="false"
+              [attr.data-bs-target]="'#collapse' + i"
+              [attr.aria-controls]="'collapse' + i"
+            >
+              {{ schedule.dateTime | date: "EEEE, MMMM d, y" }}
+            </button>
+          </h2>
+          <div
+            [id]="'collapse' + i"
+            ngClass=""
+            class="accordion-collapse collapse"
+            aria-labelledby="headingOne"
+          >
+            <div class="accordion-body">
+              <div class="d-flex justify-content-between">
+                <p>Timestamp</p>
+                <div class="buttons">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm me-2"
+                    (click)="onRemoveSchedule(i)"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    class="btn btn-outline-primary btn-sm"
+                    (click)="onEditSchedule(i)"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+              <div class=""></div>
+              <ul *ngFor="let activity of schedule.activities">
+                <li class="fw-light">
+                  {{ activity.startTime }} {{ activity.periodStartState }} -
+                  {{ activity.endTime }} {{ activity.periodEndState }}
+                  <span class="blockquote-footer">
+                    {{ activity.activity }}</span
+                  >
+                </li>
+              </ul>
+              <div name="scheduleBox" class="none-display-xl ms-4">
+                <hr appHrCenter width="150px" class="m-auto my-3" />
+                <div style="width: 100%" class="">
+                  <div class="row">
+                    <p class="fw-light text-primary col-6 text-center">AM</p>
+                    <p class="fw-light text-danger col-5 text-center">PM</p>
+                  </div>
+                  <span *ngFor="let t of timeline; let i = index">
+                    <small
+                      [ngStyle]="{
+                        left: (i + 1) * 6 + '%'
+                      }"
+                      [ngClass]="i < 6 ? 'text-primary' : 'text-danger'"
+                      class="position-relative fw-light"
+                      >{{ t }}</small
+                    >
+                  </span>
+                  <div class="schedule-box border">
+                    <div class="">
+                      <div
+                        style="flex-shrink: 0"
+                        *ngFor="let activity of schedule.activities"
+                        name="squeezerTime"
+                        class="position-relative"
+                      >
+                        <div
+                          [ngClass]="
+                            activity.periodStartState === 'AM'
+                              ? 'bg-primary'
+                              : 'bg-danger'
+                          "
+                          class="squeezer position-relative progress-bar progress-bar-striped progress-bar-animated"
+                          [ngStyle]="{
+                            left:
+                              calcSqueezerPosition(
+                                activity.periodStartState,
+                                activity.startTime
+                              ) + '%'
+                          }"
+                        ></div>
+                        <div
+                          [ngClass]="
+                            activity.periodEndState === 'AM'
+                              ? 'bg-primary'
+                              : 'bg-danger'
+                          "
+                          class="squeezer position-relative progress-bar progress-bar-striped progress-bar-animated"
+                          [ngStyle]="{
+                            left:
+                              calcSqueezerPosition(
+                                activity.periodEndState,
+                                activity.endTime
+                              ) + '%'
+                          }"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr appHrCenter width="300px" class="m-auto mt-5 mb-4" />
+</div>
+
+<!-- <ng-template #others>
+      <h5 *ngIf="i < 1" class="">Others</h5>
+      <div id="otherSelection" class="my-2">
+        <div class="accordion" id="today">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button
+                class="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapse' + i"
+                [attr.aria-controls]="'collapse' + i"
+                aria-expanded="false"
+              >
+                {{ schedule.dateTime | date: "EEEE, MMMM d, y" }}
+              </button>
+            </h2>
+            <div
+              [id]="'collapse' + i"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingOne"
+              data-bs-parent="#today"
+            >
+              <div class="accordion-body">
+                <div class="d-flex justify-content-between">
+                  <p>Timeline</p>
+                  <div class="buttons">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-sm me-2"
+                      (click)="onRemoveSchedule(i)"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      class="btn btn-outline-primary btn-sm"
+                      (click)="onEditSchedule(i)"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+                <ul *ngFor="let activity of schedule.activities">
+                  <li class="fw-light">
+                    {{ activity.startTime }} {{ activity.periodStartState }} -
+                    {{ activity.endTime }} {{ activity.periodEndState }}
+                    <span class="blockquote-footer">
+                      {{ activity.activity }}</span
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template> -->
+
+<!--* Schedule box  -->
+<!-- <div name="scheduleBox" class="ms-4">
+    <div style="width: 100%" class="">
+      <small style="left: 6%" class="position-relative text-muted"
+        >2</small
+      >
+      <small style="left: 12%" class="position-relative text-muted"
+        >4</small
+      >
+      <small style="left: 18%" class="position-relative text-muted"
+        >6</small
+      >
+      <small style="left: 24%" class="position-relative text-muted"
+        >8</small
+      >
+      <small style="left: 30%" class="position-relative text-muted"
+        >10</small
+      >
+      <small style="left: 36%" class="position-relative text-muted"
+        >12</small
+      >
+      <small style="left: 42%" class="position-relative text-muted"
+        >2</small
+      >
+      <small style="left: 48%" class="position-relative text-muted"
+        >4</small
+      >
+      <small style="left: 54%" class="position-relative text-muted"
+        >6</small
+      >
+      <small style="left: 60%" class="position-relative text-muted"
+        >8</small
+      >
+      <small style="left: 66%" class="position-relative text-muted"
+        >10</small
+      >
+      <small style="left: 72%" class="position-relative text-muted"
+        >12</small
+      >
+      <div class="schedule-box border">
+        <div class="">
+          <div
+            *ngFor="let activity of schedule.activities"
+            name="squeezerTime"
+            class="position-relative d-flex text-center"
+          >
+            <small
+              class="squeezer position-relative"
+              [ngStyle]="{
+                'background-color':
+                  activity.periodStartState == 'AM'
+                    ? 'black'
+                    : 'black',
+                left:
+                  calcSqueezerPosition(
+                    activity.periodStartState,
+                    activity.startTime
+                  ) + '%'
+              }"
+            > sd</small>
+            <span
+              class="squeezer position-relative"
+              [ngStyle]="{
+                'background-color':
+                  activity.periodEndState == 'AM'
+                    ? 'yellow'
+                    : 'yellow',
+                left:
+                  calcSqueezerPosition(
+                    activity.periodEndState,
+                    activity.endTime
+                  ) + '%'
+              }"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->

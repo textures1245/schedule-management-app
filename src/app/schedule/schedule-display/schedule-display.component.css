@@ -1,0 +1,22 @@
+.schedule-box {
+    width: 96%;
+    height: 100px;
+    background-color: #f2eeee;
+    flex-shrink: 0;
+    /* overflow-x: scroll; */
+
+    display: inline-block;
+    position: relative;
+    
+}
+
+.squeezer {
+    width: 4px;
+    height: 100px; 
+    flex-shrink: 0;
+    float: left;
+    /* display: flex;
+    flex-direction: column; */
+    /* justify-content: center;
+    align-items: center; */
+}

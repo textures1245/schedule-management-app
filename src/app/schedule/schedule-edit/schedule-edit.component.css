@@ -1,0 +1,7 @@
+button.invalid.touched {
+  border-color: red;
+}
+
+button.valid.touched {
+  border-color: green;
+}

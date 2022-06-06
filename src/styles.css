@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+.hr-center {
+    width: 100px;
+    margin: 0 auto;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.inline-display-lg {
+    display: none;
+}
+
+
+@media only screen and (max-width: 991px) {
+    .container-md {
+      text-align: center;
+    }
+  
+    .remove-schedule-md {
+        position: absolute;
+    }
+  
+    .none-display-lg {
+      display: none;
+    }
+    
+  
+    .inline-display-lg {
+        display: inline-block;
+    }
+  
+  
+  }
+
+@media only screen and (max-width: 1200px) {
+    .none-display-xl {
+        display: none;
+    }
+}

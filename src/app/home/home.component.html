@@ -1,0 +1,28 @@
+<h4 class="fw-light">Schedule Management Application {{ version }}</h4>
+<hr />
+<div class="lead fw-light">
+<p>Preface</p>
+  <ul class="">
+    <li>
+      <small>Application that helps you managing your schedules.</small><br />
+    </li>
+    <li><small>Which used NgRx application state constructor.</small><br /></li>
+    <li>
+      <small
+        >Also this app using Lazy Loader and Per-loaded to reduce timing, which
+        loaded application faster.</small
+      ><br />
+    </li>
+    <li>
+      <small>Used Firebase backend to store/fetched data</small>
+    </li>
+  </ul>
+</div>
+<p class="lead">What this application can do?</p>
+<div class="text-muted">
+    <ul *ngFor="let detail of appDetail">
+        <li>
+           {{detail}}
+        </li>
+    </ul>
+</div>

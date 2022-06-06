@@ -1,0 +1,131 @@
+<div>
+  <div class="header fw-light">
+    <h4>
+      {{ isEditMode ? "Edit" : "New" }} Schedule
+      {{
+        dateChanging != null
+          ? "(" + (dateChanging | date: "EEEE, MMMM d, y") + ")"
+          : null
+      }}
+    </h4>
+    <hr />
+  </div>
+  <div name="detailTopic" class="row none-display-lg">
+    <div class="col-4 text-center">
+      <h5 class="fw-light">Period Time</h5>
+    </div>
+    <div class="col-8 text-center">
+      <h5 class="ms-5 fw-light">Activities</h5>
+    </div>
+  </div>
+  <div class="form mt-3 ms-2">
+    <form [formGroup]="formObject" (ngSubmit)="onSubmit()">
+      <div formArrayName="activities">
+        <div
+          *ngFor="let c of controls; let i = index"
+          [formGroupName]="i"
+          for="activities"
+          class="row align-items-center mt-3"
+        >
+        <div class="inline-display-lg text-muted">
+          {{ i + 1 }}
+        </div>
+          <div name="periodTime" class="col-lg-4 container-md">
+            <input
+              #periodStartTime
+              name="startTime"
+              formControlName="startTime"
+              type="number"
+              max="12"
+              class="col-2 me-2"
+            />
+            <select
+              class="col-2 me-2"
+              name="periodStartState"
+              formControlName="periodStartState"
+              #periodStartState
+            >
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+            -
+            <input
+              #periodEndTime
+              name="endTime"
+              formControlName="endTime"
+              type="number"
+              max="12"
+              id=""
+              class="col-2 ms-2"
+            />
+            <select
+              class="col-2 ms-2"
+              #periodEndState
+              name="periodEndState"
+              formControlName="periodEndState"
+            >
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </div>
+          <div class="col-lg-6 container-md mt-1">
+            <input
+              #activity
+              name="activity"
+              formControlName="activity"
+              type="text"
+              class="form-control"
+              id=""
+              placeholder="Activities"
+            />
+          </div>
+          <div class="col-md-2 container-md mt-1">
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm"
+              (click)="onRemoveActivity(i)"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <div name="date" class="mt-4">
+          <input
+          #dateTime
+          name="dateTime"
+          formControlName="dateTime"
+          type="date"
+          />
+        </div>
+        <div name="button-group" class="mt-3">
+          <button
+            class="btn btn-outline-success btn-sm me-2"
+            [disabled]="formObject.invalid"
+          >
+            {{ isEditMode ? "Update" : "Submit" }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+            (click)="onAddNewActivity()"
+          >
+            Add New Activity
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="offset-md-3">
+      <p class="text-center">
+        <small>
+          <span
+            *ngIf="formObject.invalid && formObject.touched"
+            class="text-danger"
+            >* All fields are required to submit a request</span
+          >
+        </small>
+      </p>
+    </div>
+  </div>
+</div>
