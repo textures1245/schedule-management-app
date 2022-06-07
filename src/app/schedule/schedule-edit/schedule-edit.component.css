@@ -5,3 +5,9 @@ button.invalid.touched {
 button.valid.touched {
   border-color: green;
 }
+
+@media only screen and (max-width: 991px) {
+  .none-display-lg {
+    display: none;
+  }
+}

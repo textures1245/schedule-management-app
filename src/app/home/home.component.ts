@@ -12,10 +12,10 @@ export class HomeComponent implements OnInit {
     'Deleted schedules.',
     'Display schedules timestamp in real-time.',
     'Responsive design.',
-    'Show table schedule timeline in real-time (supported more then 1200 pixel screen size only).'
+    '<BETA> Show table schedule timeline in real-time (supported more then 1200 pixel screen size only).'
   ]
   
-  version = '1.0.0';
+  version = '1.1.1';
 
   constructor() { }
 

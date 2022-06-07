@@ -19,6 +19,7 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
   isSaveSchedule = false;
   clearSaveState$ = Subscription.EMPTY;
   timeline = [2, 4, 6, 8, 10, 12, 2, 4, 6, 8, 10, 12];
+  squeezerStartTime: number;
 
   constructor(
     private store: Store<fromGlobalReducer.AppState>,
@@ -61,12 +62,21 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
     this.clearSaveState$.unsubscribe();
   }
 
-  calcSqueezerPosition(periodState: string, time: number): number {
-    if (periodState == 'AM') {
-      return time * 3.3;
-    } else {
-      return time * 3 + 48;
+  calcSqueezerPosition(periodStartState: string, time: number): number {
+      if (periodStartState == 'AM') {
+        this.squeezerStartTime = time * 3.7;
+        return this.squeezerStartTime;
+      } else {
+        this.squeezerStartTime = (time * 2.3) + 48;
+        return this.squeezerStartTime
+      }
     }
+
+  calcSqueezerWidth(periodEndState: string, time: number): number {
+    if (periodEndState == 'AM') {
+      return (time * 3.6) - this.squeezerStartTime;
+    }
+    return ((time * 2.6) + 48) - this.squeezerStartTime;
   }
 
   getCurrentTime(): number {
@@ -78,7 +88,7 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
   }
 
   outdatedSchedule(date: Date): boolean { 
-    if (new Date(date).getTime() / 1000 < this.getCurrentTime()) {
+    if (new Date(date).getTime() / 1000 <= this.getCurrentTime() - 86400) {
       return true;
     }
     return false;

@@ -43,7 +43,9 @@
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button
-              [ngClass]="outdatedSchedule(schedule.dateTime) ? 'text-secondary': ''"
+              [ngClass]="
+                outdatedSchedule(schedule.dateTime) ? 'text-secondary' : ''
+              "
               class="accordion-button"
               type="button"
               data-bs-toggle="collapse"
@@ -54,7 +56,9 @@
               {{ schedule.dateTime | date: "EEEE, MMMM d, y" }}
               <em>
                 <small>
-                  {{ outdatedSchedule(schedule.dateTime) ? " -  Outdated" : "" }}
+                  {{
+                    outdatedSchedule(schedule.dateTime) ? " -  Outdated" : ""
+                  }}
                 </small>
               </em>
             </button>
@@ -101,6 +105,7 @@
                     <p class="fw-light text-primary col-6 text-center">AM</p>
                     <p class="fw-light text-danger col-5 text-center">PM</p>
                   </div>
+                  <!--? for creating period timestamp -->
                   <span *ngFor="let t of timeline; let i = index">
                     <small
                       [ngStyle]="{
@@ -111,10 +116,11 @@
                       >{{ t }}</small
                     >
                   </span>
+                  <!--? schedule table -->
                   <div class="schedule-box border">
                     <div class="">
                       <div
-                        style="flex-shrink: 0"
+                        style="flex-shrink: 0;"
                         *ngFor="let activity of schedule.activities"
                         name="squeezerTime"
                         class="position-relative"
@@ -131,19 +137,9 @@
                               calcSqueezerPosition(
                                 activity.periodStartState,
                                 activity.startTime
-                              ) + '%'
-                          }"
-                        ></div>
-                        <div
-                          [ngClass]="
-                            activity.periodEndState === 'AM'
-                              ? 'bg-primary'
-                              : 'bg-danger'
-                          "
-                          class="squeezer position-relative progress-bar progress-bar-striped progress-bar-animated"
-                          [ngStyle]="{
-                            left:
-                              calcSqueezerPosition(
+                              ) + '%',
+                            width:
+                              calcSqueezerWidth(
                                 activity.periodEndState,
                                 activity.endTime
                               ) + '%'
@@ -162,64 +158,6 @@
   </div>
   <hr appHrCenter width="300px" class="m-auto mt-5 mb-4" />
 </div>
-
-<!-- <ng-template #others>
-      <h5 *ngIf="i < 1" class="">Others</h5>
-      <div id="otherSelection" class="my-2">
-        <div class="accordion" id="today">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-              <button
-                class="accordion-button"
-                type="button"
-                data-bs-toggle="collapse"
-                [attr.data-bs-target]="'#collapse' + i"
-                [attr.aria-controls]="'collapse' + i"
-                aria-expanded="false"
-              >
-                {{ schedule.dateTime | date: "EEEE, MMMM d, y" }}
-              </button>
-            </h2>
-            <div
-              [id]="'collapse' + i"
-              class="accordion-collapse collapse"
-              aria-labelledby="headingOne"
-              data-bs-parent="#today"
-            >
-              <div class="accordion-body">
-                <div class="d-flex justify-content-between">
-                  <p>Timeline</p>
-                  <div class="buttons">
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger btn-sm me-2"
-                      (click)="onRemoveSchedule(i)"
-                    >
-                      Remove
-                    </button>
-                    <button
-                      class="btn btn-outline-primary btn-sm"
-                      (click)="onEditSchedule(i)"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
-                <ul *ngFor="let activity of schedule.activities">
-                  <li class="fw-light">
-                    {{ activity.startTime }} {{ activity.periodStartState }} -
-                    {{ activity.endTime }} {{ activity.periodEndState }}
-                    <span class="blockquote-footer">
-                      {{ activity.activity }}</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template> -->
 
 <!--* Schedule box  -->
 <!-- <div name="scheduleBox" class="ms-4">
@@ -300,3 +238,12 @@
       </div>
     </div>
   </div> -->
+
+<!--? right squeezer  -->
+<!-- <div
+  [ngClass]="activity.periodEndState === 'AM' ? 'bg-primary' : 'bg-danger'"
+  class="squeezer position-relative progress-bar progress-bar-striped progress-bar-animated"
+  [ngStyle]="{
+    left: calcSqueezerPosition(activity.periodEndState, activity.endTime) + '%'
+  }"
+></div> -->

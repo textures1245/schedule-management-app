@@ -11,7 +11,7 @@
 }
 
 .squeezer {
-    width: 4px;
+    /* width: 4px; */
     height: 100px; 
     flex-shrink: 0;
     float: left;
