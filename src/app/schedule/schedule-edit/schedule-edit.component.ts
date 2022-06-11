@@ -30,6 +30,7 @@ export class ScheduleEditComponent implements OnInit, OnDestroy {
       if (state.editedScheduleIndex > -1) {
         this.isEditMode = true;
         this.scheduleEditor = state.editedSchedule;
+        console.log(this.scheduleEditor)
         this.dateChanging = this.scheduleEditor.dateTime;
       } else {
         this.isEditMode = false;

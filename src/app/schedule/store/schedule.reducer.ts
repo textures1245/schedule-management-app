@@ -17,8 +17,8 @@ const initialState: State = {
     // new Schedule(new Date(2022, 5, 1, 8, 0, 0), [
     //   new Activity(2, 'AM', 8, 'AM', 'Some text'),
     //   new Activity(2, 'AM', 8, 'AM', 'Some text'),
-    // ]),
   ],
+    // ]),
   dataChanged: false,
   editedSchedule: null,
   editedScheduleIndex: -1,
@@ -31,10 +31,11 @@ export function ScheduleReducer(
 ): State {
   switch (action.type) {
     case ScheduleAction.ADD_SCHEDULE:
+      const generateId = state.schedules.length === 0 ? 0 : state.schedules.length;
       return {
         ...state,
         dataChanged: true,
-        schedules: [...state.schedules, action.payload],
+        schedules: [...state.schedules, {  id: generateId, ...action.payload }],
       };
     case ScheduleAction.GET_SCHEDULE:
       return {
@@ -68,14 +69,14 @@ export function ScheduleReducer(
         ...state,
         dataChanged: true,
         schedules: state.schedules.filter((ig, index) => {
-          return index !== action.payload;
+          return ig.id !== action.payload;
         }),
       };
     case ScheduleAction.START_EDIT:
       return {
         ...state,
         editedScheduleIndex: action.payload,
-        editedSchedule: { ...state.schedules[action.payload] }, //* copy the schedule edited
+        editedSchedule: { ...state.schedules[action.payload]  }, //* copy the schedule edited
       }
     case ScheduleAction.STOP_EDIT:
       return {

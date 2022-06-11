@@ -23,7 +23,7 @@
   <hr />
   <div
     class="body"
-    *ngFor="let schedule of (schedules | async).schedules; let i = index"
+    *ngFor="let schedule of sortSchedules; let i = index"
   >
     <div id="scheduleSelection" class="my-2">
       <h5
@@ -76,13 +76,13 @@
                   <button
                     type="button"
                     class="btn btn-outline-danger btn-sm me-2"
-                    (click)="onRemoveSchedule(i)"
+                    (click)="onRemoveSchedule(schedule.id)"
                   >
                     Remove
                   </button>
                   <button
                     class="btn btn-outline-primary btn-sm"
-                    (click)="onEditSchedule(i)"
+                    (click)="onEditSchedule(schedule.id)"
                   >
                     Edit
                   </button>
