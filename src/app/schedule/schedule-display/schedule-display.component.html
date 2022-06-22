@@ -57,7 +57,7 @@
               <em>
                 <small>
                   {{
-                    outdatedSchedule(schedule.dateTime) ? " -  Outdated" : ""
+                    outdated ? " -  Outdated" : ""
                   }}
                 </small>
               </em>
@@ -71,7 +71,11 @@
           >
             <div class="accordion-body">
               <div class="d-flex justify-content-between">
-                <p>Timestamp</p>
+                <p>Timestamp
+                  <small style="font-style: italic;" class="text-muted fw-light">
+                    {{ !outdated ? ' - ' + dayLeft + ' days left' : '' }}
+                  </small>
+                </p>
                 <div class="buttons">
                   <button
                     type="button"

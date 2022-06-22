@@ -21,6 +21,8 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
   clearSaveState$ = Subscription.EMPTY;
   timeline = [2, 4, 6, 8, 10, 12, 2, 4, 6, 8, 10, 12];
   squeezerStartTime: number;
+  outdated = false;
+  dayLeft = 0;
 
   constructor(
     private store: Store<fromGlobalReducer.AppState>,
@@ -30,7 +32,7 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.schedules = this.store.select('scheduleState');
+    // this.schedules = this.store.select('scheduleState');
     this.store.select('scheduleState').subscribe((state) => {
       this.sortSchedules = [...state.schedules]
       this.sortSchedules = this.sortSchedules.sort((a: Schedule, b: Schedule) => {
@@ -72,10 +74,10 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
 
   calcSqueezerPosition(periodStartState: string, time: number): number {
     if (periodStartState == 'AM') {
-      this.squeezerStartTime = time * 3.7;
+      this.squeezerStartTime = time * 3.6;
       return this.squeezerStartTime;
     } else {
-      this.squeezerStartTime = time * 2.3 + 48;
+      this.squeezerStartTime = time * 3.6 + 48;
       return this.squeezerStartTime;
     }
   }
@@ -84,7 +86,7 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
     if (periodEndState == 'AM') {
       return time * 3.6 - this.squeezerStartTime;
     }
-    return time * 2.6 + 48 - this.squeezerStartTime;
+    return time * 3.6 + 48 - this.squeezerStartTime;
   }
 
   getCurrentTime(): number {
@@ -97,8 +99,12 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
 
   outdatedSchedule(date: Date): boolean {
     if (new Date(date).getTime() / 1000 <= this.getCurrentTime() - 86400) {
+      this.outdated = true;
       return true;
     }
+    this.dayLeft =  Math.ceil((new Date(date).getTime() / 1000 - this.getCurrentTime()) / 86400);
+    this.outdated = false;
     return false;
   }
+
 }
