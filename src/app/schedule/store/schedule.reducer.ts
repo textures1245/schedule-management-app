@@ -18,24 +18,27 @@ const initialState: State = {
     //   new Activity(2, 'AM', 8, 'AM', 'Some text'),
     //   new Activity(2, 'AM', 8, 'AM', 'Some text'),
   ],
-    // ]),
+  // ]),
   dataChanged: false,
   editedSchedule: null,
   editedScheduleIndex: -1,
 };
 
 export function ScheduleReducer(
-
   state = initialState,
   action: ScheduleAction.ScheduleActions
 ): State {
   switch (action.type) {
     case ScheduleAction.ADD_SCHEDULE:
-      const generateId = state.schedules.length === 0 ? 0 : state.schedules.length;
+      const generateId =
+        state.schedules.length === 0
+          ? 0
+          : Math.max(...state.schedules.map((s) => s.id)) + 1;
+      console.log(generateId);
       return {
         ...state,
         dataChanged: true,
-        schedules: [...state.schedules, {  id: generateId, ...action.payload }],
+        schedules: [...state.schedules, { id: generateId, ...action.payload }],
       };
     case ScheduleAction.GET_SCHEDULE:
       return {
@@ -50,7 +53,7 @@ export function ScheduleReducer(
       return {
         ...state,
         schedules: setNewSchedules,
-      }
+      };
     case ScheduleAction.UPDATE_SCHEDULE:
       const schedule = state.schedules[state.editedScheduleIndex];
       const updatedSchedule: Schedule = {
@@ -63,7 +66,7 @@ export function ScheduleReducer(
         ...state,
         dataChanged: true,
         schedules: updateSchedule,
-      }
+      };
     case ScheduleAction.DELETE_SCHEDULE:
       return {
         ...state,
@@ -76,19 +79,19 @@ export function ScheduleReducer(
       return {
         ...state,
         editedScheduleIndex: action.payload,
-        editedSchedule: { ...state.schedules[action.payload]  }, //* copy the schedule edited
-      }
+        editedSchedule: { ...state.schedules.find((s) => s.id == action.payload) }, //* copy the schedule edited
+      };
     case ScheduleAction.STOP_EDIT:
       return {
         ...state,
         editedScheduleIndex: -1,
         editedSchedule: null,
-      }
+      };
     case ScheduleAction.CHANGED_STATE:
       return {
         ...state,
         dataChanged: false,
-      }
+      };
     default:
       return state;
   }

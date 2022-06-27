@@ -25,4 +25,11 @@
            {{detail}}
         </li>
     </ul>
+<p class="lead">Patches on {{ version }}</p>
+<div class="text-muted">
+    <ul *ngFor="let patch of patches">
+        <li>
+          {{patch}}
+        </li>
+    </ul>
 </div>

@@ -1,7 +1,7 @@
-import { Component, Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Route, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { DataStorageService } from '../data-storage.service';
 import { Schedule } from '../sehedule.model';
 import * as fromGlobalReducer from '../store/global.reducer';
@@ -19,10 +19,12 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
   showCollapsed = false;
   isSaveSchedule = false;
   clearSaveState$ = Subscription.EMPTY;
+  _clearSchedules$ = Subscription.EMPTY;
   timeline = [2, 4, 6, 8, 10, 12, 2, 4, 6, 8, 10, 12];
   squeezerStartTime: number;
   outdated = false;
   dayLeft = 0;
+
 
   constructor(
     private store: Store<fromGlobalReducer.AppState>,
@@ -33,12 +35,19 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.schedules = this.store.select('scheduleState');
-    this.store.select('scheduleState').subscribe((state) => {
-      this.sortSchedules = [...state.schedules]
-      this.sortSchedules = this.sortSchedules.sort((a: Schedule, b: Schedule) => {
-        return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+    this._clearSchedules$ = this.store
+      .select('scheduleState')
+      .pipe(map((state) => state.schedules))
+      .subscribe((schedules) => {
+        this.sortSchedules = [...schedules];
+        this.sortSchedules = this.sortSchedules.sort(
+          (a: Schedule, b: Schedule) => {
+            return (
+              new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+            );
+          }
+        );
       });
-    });
 
     this.clearSaveState$ = this.store
       .select('scheduleState')
@@ -54,6 +63,7 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
   }
 
   onEditSchedule(index: number) {
+    console.log(index);
     this.store.dispatch(new ScheduleAction.StartEdit(index));
     this.router.navigate([index, 'edit'], { relativeTo: this.route });
   }
@@ -68,10 +78,7 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
     this.dataStorageService.fetchSchedules();
   }
 
-  ngOnDestroy(): void {
-    this.clearSaveState$.unsubscribe();
-  }
-
+  
   calcSqueezerPosition(periodStartState: string, time: number): number {
     if (periodStartState == 'AM') {
       this.squeezerStartTime = time * 3.6;
@@ -81,30 +88,40 @@ export class ScheduleDisplayComponent implements OnInit, OnDestroy {
       return this.squeezerStartTime;
     }
   }
-
+  
   calcSqueezerWidth(periodEndState: string, time: number): number {
     if (periodEndState == 'AM') {
       return time * 3.6 - this.squeezerStartTime;
     }
     return time * 3.6 + 48 - this.squeezerStartTime;
   }
-
+  
   getCurrentTime(): number {
     return new Date().getTime() / 1000;
   }
-
+  
   getDateTime(date: Date): number {
     return new Date(date).getTime() / 1000;
   }
-
+  
   outdatedSchedule(date: Date): boolean {
     if (new Date(date).getTime() / 1000 <= this.getCurrentTime() - 86400) {
       this.outdated = true;
       return true;
     }
-    this.dayLeft =  Math.ceil((new Date(date).getTime() / 1000 - this.getCurrentTime()) / 86400);
-    this.outdated = false;
-    return false;
-  }
+    this.dayLeft = Math.ceil(
+      (new Date(date).getTime() / 1000 - this.getCurrentTime()) / 86400
+      );
+      this.outdated = false;
+      return false;
+    }
 
-}
+    ngOnDestroy(): void {
+      if (this._clearSchedules$) {
+        this._clearSchedules$.unsubscribe();
+      }
+      if (this.clearSaveState$) {
+        this.clearSaveState$.unsubscribe();
+      }
+    }
+  }

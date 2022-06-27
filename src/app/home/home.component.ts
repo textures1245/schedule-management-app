@@ -12,10 +12,13 @@ export class HomeComponent implements OnInit {
     'Deleted schedules.',
     'Display schedules timestamp in real-time.',
     'Responsive design.',
-    '<BETA> Show table schedule timeline in real-time (supported more then 1200 pixel screen size only).'
+  ]
+  patches = [
+    '<BETA> Show table schedule timeline in real-time (supported more then 1200 pixel screen size only).',
+    'Fixed bug when created new schedule but it has overwrite on other schedule and wrong detect id schedule.',
   ]
   
-  version = '1.1.1';
+  version = '1.1.2';
 
   constructor() { }
 
